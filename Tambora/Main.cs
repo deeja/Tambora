@@ -3,6 +3,7 @@ using System.Windows.Forms;
 
 namespace Tambora
 {
+    using Tambora.PackageExploder;
     using Tambora.Treeview;
 
     public partial class Main : Form

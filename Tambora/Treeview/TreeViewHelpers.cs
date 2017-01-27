@@ -3,6 +3,8 @@
     using System.Drawing;
     using System.Windows.Forms;
 
+    using Tambora.PackageExploder;
+
     public static class TreeViewHelpers
     {
         public static void AddItemAndChildren(PackageItem[] items, TreeNode itemNode)

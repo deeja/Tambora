@@ -5,6 +5,8 @@ namespace Tambora
     using System.Security.Cryptography;
     using System.Threading;
 
+    using Tambora.PackageExploder;
+
     public sealed class DummyPackageExploder : IPackageExploder
     {
         public event EventHandler<PackageExplodedArgs> PackageExploded;
@@ -57,12 +59,5 @@ namespace Tambora
         {
             this.ProcessingFinished?.Invoke(this, EventArgs.Empty);
         }
-    }
-
-    public class PackageItem
-    {
-        public string Name { get; set; }
-
-        public PackageItem[] Items { get; set; }
     }
 }

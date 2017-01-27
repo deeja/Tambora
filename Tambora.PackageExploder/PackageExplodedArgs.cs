@@ -1,4 +1,4 @@
-﻿namespace Tambora
+﻿namespace Tambora.PackageExploder
 {
     using System;
 
