@@ -20,8 +20,8 @@ namespace Tambora.PackageExploder.Tests
     public class PackageExploder_ExplodePackage
     {
         private PackageExploder exploder;
-        Mock<IPackageValidator> validator;
 
+        private Mock<IPackageValidator> validator;
 
         [SetUp]
         public void SetUp()
@@ -30,10 +30,15 @@ namespace Tambora.PackageExploder.Tests
             exploder = new PackageExploder(validator.Object);
         }
 
-        [Test, ExpectedException(typeof(FileNotFoundException))]
-        public void FileDoesntExist_FileNotFoundThrown()
+        [Test]
+        [ExpectedException(typeof(FileNotFoundException))]
+        public async void FileDoesntExist_FileNotFoundThrown()
         {
-            exploder.ExplodePackage("X:/doesntexist");
+            var testingString = "testing string";
+            this.validator.Setup(packageValidator => packageValidator.IsFileExtensionValid(It.IsAny<string>()))
+                .Returns(true);
+            validator.Setup(packageValidator => packageValidator.FileExists(testingString)).Returns(false);
+            var packageItems = await this.exploder.ExplodePackage(testingString);
         }
 
         /// <summary>
@@ -44,36 +49,38 @@ namespace Tambora.PackageExploder.Tests
         [TestCase("C:\\something\\file.zip", true)]
         [TestCase("C:\\something\\lala.update", false)] // to be accepted in the future
         [TestCase("C:\\something\\lala.jpg", false)]
-        public void File_ValidExtension(string file, bool isAccepted)
+        public async void File_ValidExtension(string file, bool isAccepted)
         {
+            this.validator.Setup(packageValidator => packageValidator.IsFileExtensionValid(file)).Returns(isAccepted);
+            validator.Setup(packageValidator => packageValidator.FileExists(It.IsAny<string>())).Returns(true);
             try
             {
-                exploder.ExplodePackage(file);
+                await exploder.ExplodePackage(file);
             }
             catch (Exception exception)
             {
-                if (isAccepted)
+                if (!isAccepted)
                 {
-                    Assert.IsInstanceOf<FileNotFoundException>(exception);
-                    return;
+                    Assert.IsInstanceOf<FileExtensionNotAcceptedException>(exception);
                 }
-
-                Assert.IsInstanceOf<FileExtensionNotAcceptedException>(exception);
                 return;
             }
 
             Assert.Fail("Error should have been thrown");
         }
 
-
-        [Test, ExpectedException(typeof(FileNotValidPackageException))]
-        public void ProvidedPackageIsNotValid()
+        [Test]
+        [ExpectedException(typeof(FileNotValidPackageException))]
+        public async void ProvidedPackageIsNotValid()
         {
+            this.validator.Setup(packageValidator => packageValidator.IsFileExtensionValid(It.IsAny<string>()))
+                .Returns(true);
+            validator.Setup(packageValidator => packageValidator.FileExists(It.IsAny<string>())).Returns(true);
+
             // referencing a file that exists so I don't need to swap out the File.FileExists("...")
-            string filename = Path.Combine(Environment.CurrentDirectory, "Resources\\NotAValidPackage.zip");
+            string filename = "a test file";
             validator.Setup(packageValidator => packageValidator.IsPackageValid(filename)).Returns(false);
-            exploder.ExplodePackage(filename);
+            await exploder.ExplodePackage(filename);
         }
-        
     }
 }

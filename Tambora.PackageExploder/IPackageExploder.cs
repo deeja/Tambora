@@ -1,15 +1,14 @@
 ﻿namespace Tambora.PackageExploder
 {
     using System;
+    using System.Threading.Tasks;
 
     public interface IPackageExploder
     {
-        event EventHandler<PackageExplodedArgs> PackageExploded;
-
         event EventHandler<PackageProcessingArgs> ProcessingStarted;
 
         event EventHandler ProcessingFinished;
 
-        void ExplodePackage(string fileName);
+        Task<PackageItem[]> ExplodePackage(string fileName);
     }
 }

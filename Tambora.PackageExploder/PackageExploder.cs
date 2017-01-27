@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Threading.Tasks;
 
     using Exceptions;
 
@@ -20,22 +21,26 @@
 
         public event EventHandler ProcessingFinished;
 
-        public void ExplodePackage(string fileName)
+        public async Task<PackageItem[]> ExplodePackage(string fileName)
         {
-            if (!".zip".Equals(Path.GetExtension(fileName), StringComparison.InvariantCultureIgnoreCase))
+            if (!packageValidator.IsFileExtensionValid(fileName))
             {
                 throw new FileExtensionNotAcceptedException($"{fileName} does not have a valid extension");
             }
 
-            if (!File.Exists(fileName))
+            if (!packageValidator.FileExists(fileName))
             {
                 throw new FileNotFoundException($"Couldn't find the file {fileName}", fileName);
             }
 
-            if (!packageValidator.IsPackageValid(fileName))
+            if (!this.packageValidator.IsPackageValid(fileName))
             {
                 throw new FileNotValidPackageException($"{fileName} is not a valid package");
             }
+
+            return new PackageItem[0];
+            return null;
+
         }
     }
 }

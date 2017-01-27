@@ -3,6 +3,8 @@ using System.Windows.Forms;
 
 namespace Tambora
 {
+    using System.Threading.Tasks;
+
     using Tambora.PackageExploder;
     using Tambora.Treeview;
 
@@ -15,8 +17,6 @@ namespace Tambora
             this.InitializeComponent();
             this.packageExploder.ProcessingStarted += (s, e) => this.Invoke(() => this.ShowProcessing(e.Filename));
             this.packageExploder.ProcessingFinished += (s, e) => this.Invoke(this.HideProcessing);
-            this.packageExploder.PackageExploded +=
-                (sender, args) => this.Invoke(() => this.HandleExplodedPackage(args));
         }
 
         private void HideProcessing()
@@ -35,11 +35,7 @@ namespace Tambora
         {
             ((Control)this).Invoke(methodInvoker);
         }
-
-        private void HandleExplodedPackage(PackageExplodedArgs args)
-        {
-            TreeViewHelpers.SetupTreeViewWithPackage(args, treeView1);
-        }
+        
 
         private void about_Click(object sender, EventArgs e)
         {
@@ -52,11 +48,14 @@ namespace Tambora
             this.Close();
         }
 
-        private void openPackageToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void openPackageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                this.packageExploder.ExplodePackage(this.openFileDialog1.SafeFileName);
+                Task.Run( async () => {
+                            var packageItems = await packageExploder.ExplodePackage(this.openFileDialog1.SafeFileName);
+                            Invoke(() => TreeViewHelpers.SetupTreeViewWithPackage(packageItems, treeView1));
+                        });
             }
         }
 

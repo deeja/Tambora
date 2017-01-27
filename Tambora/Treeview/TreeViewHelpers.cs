@@ -42,11 +42,11 @@
             treeNode.BackColor = enabled ? EnabledColour : DisabledColour;
         }
 
-        public static void SetupTreeViewWithPackage(PackageExplodedArgs args, TreeView treeView)
+        public static void SetupTreeViewWithPackage(PackageItem[] packageItems, TreeView treeView)
         {
             treeView.Nodes.Clear();
             TreeNode itemNode = new TreeNode("Items") { Checked = true };
-            TreeViewHelpers.AddItemAndChildren(args.Items, itemNode);
+            AddItemAndChildren(packageItems, itemNode);
             treeView.Nodes.Add(itemNode);
             treeView.ExpandAll();
         }
