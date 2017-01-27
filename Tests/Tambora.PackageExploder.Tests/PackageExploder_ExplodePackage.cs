@@ -80,8 +80,10 @@ namespace Tambora.PackageExploder.Tests
                 .Returns(true);
             validator.Setup(packageValidator => packageValidator.FileExists(It.IsAny<string>())).Returns(true);
 
-            // referencing a file that exists so I don't need to swap out the File.FileExists("...")
             string filename = "a test file";
+            this.packageLoader.Setup(loader => loader.LoadPackage(filename))
+                .Throws(new FileNotValidPackageException("this is a test"));
+            
             await exploder.ExplodePackage(filename);
         }
     }

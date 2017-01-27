@@ -34,6 +34,8 @@
                 throw new FileNotFoundException($"Couldn't find the file {fileName}", fileName);
             }
 
+            var packageEntrySink = this.packageLoader.LoadPackage(fileName);
+
             return new PackageItem[0];
         }
     }

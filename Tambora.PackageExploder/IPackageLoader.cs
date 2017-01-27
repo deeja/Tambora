@@ -2,6 +2,6 @@
 {
     public interface IPackageLoader
     {
-         
+        PackageEntrySink LoadPackage(string filename);
     }
 }
