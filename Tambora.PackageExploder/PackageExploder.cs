@@ -10,12 +10,13 @@
     {
         private readonly IPackageValidator packageValidator;
 
-        public PackageExploder(IPackageValidator packageValidator)
+        private readonly IPackageLoader packageLoader;
+
+        public PackageExploder(IPackageValidator packageValidator, IPackageLoader packageLoader)
         {
             this.packageValidator = packageValidator;
+            this.packageLoader = packageLoader;
         }
-
-        public event EventHandler<PackageExplodedArgs> PackageExploded;
 
         public event EventHandler<PackageProcessingArgs> ProcessingStarted;
 
@@ -33,14 +34,7 @@
                 throw new FileNotFoundException($"Couldn't find the file {fileName}", fileName);
             }
 
-            if (!this.packageValidator.IsPackageValid(fileName))
-            {
-                throw new FileNotValidPackageException($"{fileName} is not a valid package");
-            }
-
             return new PackageItem[0];
-            return null;
-
         }
     }
 }

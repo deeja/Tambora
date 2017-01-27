@@ -53,11 +53,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PackageExploder_ExplodePackage.cs" />
+    <Compile Include="PackageValidatorTests.cs" />
+    <Compile Include="FilePaths.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\NotAValidPackage.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\ValidPackageFilesItems.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -23,11 +23,14 @@ namespace Tambora.PackageExploder.Tests
 
         private Mock<IPackageValidator> validator;
 
+        private Mock<IPackageLoader> packageLoader;
+
         [SetUp]
         public void SetUp()
         {
             validator = new Mock<IPackageValidator>();
-            exploder = new PackageExploder(validator.Object);
+            packageLoader = new Mock<IPackageLoader>();
+            exploder = new PackageExploder(validator.Object, packageLoader.Object);
         }
 
         [Test]
@@ -79,7 +82,6 @@ namespace Tambora.PackageExploder.Tests
 
             // referencing a file that exists so I don't need to swap out the File.FileExists("...")
             string filename = "a test file";
-            validator.Setup(packageValidator => packageValidator.IsPackageValid(filename)).Returns(false);
             await exploder.ExplodePackage(filename);
         }
     }
