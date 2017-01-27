@@ -1,7 +1,9 @@
 ﻿namespace Tambora.PackageExploder
 {
+    using System.Threading.Tasks;
+
     public interface IPackageLoader
     {
-        PackageEntrySink LoadPackage(string filename);
+        Task<PackageEntrySink> LoadPackage(string filename);
     }
 }

@@ -17,7 +17,7 @@ namespace Tambora
         {
             OnProcessingStarted(fileName);
 
-            Thread.Sleep(4000);
+            await Task.Delay(1000);
             PackageItem item = null;
 
             for (int i = 0; i < 5; i++)

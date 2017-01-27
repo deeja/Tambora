@@ -49,7 +49,7 @@ namespace Tambora
             this.Close();
         }
         
-        private async void openPackageToolStripMenuItem_Click(object sender, EventArgs e)
+        private void openPackageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
             {

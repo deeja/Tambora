@@ -6,6 +6,9 @@
 
     using Exceptions;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class PackageExploder: IPackageExploder
     {
         private readonly IPackageValidator packageValidator;
@@ -34,7 +37,7 @@
                 throw new FileNotFoundException($"Couldn't find the file {fileName}", fileName);
             }
 
-            var packageEntrySink = this.packageLoader.LoadPackage(fileName);
+            var packageEntrySink = await this.packageLoader.LoadPackage(fileName);
 
             return new PackageItem[0];
         }
