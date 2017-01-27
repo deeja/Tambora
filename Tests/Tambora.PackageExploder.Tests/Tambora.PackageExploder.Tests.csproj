@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{85B44088-1951-45DB-B551-7712BA8A13EC}</ProjectGuid>
+    <ProjectGuid>{0BC53625-ADB8-4054-A434-05D4EBF76CD3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tambora.PackageExploder</RootNamespace>
-    <AssemblyName>Tambora.PackageExploder</AssemblyName>
+    <RootNamespace>Tambora.PackageExploder.Tests</RootNamespace>
+    <AssemblyName>Tambora.PackageExploder.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,13 +44,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\FileExtensionNotAcceptedException.cs" />
-    <Compile Include="IPackageExploder.cs" />
-    <Compile Include="Events\PackageExplodedArgs.cs" />
-    <Compile Include="PackageExploder.cs" />
-    <Compile Include="PackageItem.cs" />
-    <Compile Include="Events\PackageProcessingArgs.cs" />
+    <Compile Include="PackageExploder_ExplodePackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Tambora.PackageExploder\Tambora.PackageExploder.csproj">
+      <Project>{85b44088-1951-45db-b551-7712ba8a13ec}</Project>
+      <Name>Tambora.PackageExploder</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
