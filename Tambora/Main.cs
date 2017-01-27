@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Tambora
 {
-    using System.ComponentModel;
-    using System.Runtime.InteropServices;
+    using Tambora.Treeview;
 
     public partial class Main : Form
     {
         private IPackageExploder packageExploder = new DummyPackageExploder();
-
 
         public Main()
         {
@@ -45,26 +37,7 @@ namespace Tambora
 
         private void HandleExplodedPackage(PackageExplodedArgs args)
         {
-            treeView1.Nodes.Clear();
-            TreeNode itemNode = new TreeNode("Items") { Checked = true };
-            AddItemAndChildren(args.Items, itemNode);
-            treeView1.Nodes.Add(itemNode);
-            treeView1.ExpandAll();
-        }
-
-        private static void AddItemAndChildren(PackageItem[] items, TreeNode itemNode)
-        {
-            foreach (var item in items)
-            {
-                TreeNode next = new TreeNode(item.Name)
-                                    {
-                                        Tag = item,
-                                        Checked = true
-                                    };
-                
-                AddItemAndChildren(item.Items, next);
-                itemNode.Nodes.Add(next);
-            }
+            TreeViewHelpers.SetupTreeViewWithPackage(args, treeView1);
         }
 
         private void about_Click(object sender, EventArgs e)
@@ -86,68 +59,9 @@ namespace Tambora
             }
         }
 
-        private void treeView1_ParentChanged(object sender, EventArgs e)
-        {
-            TreeNode o = sender as TreeNode;
-        }
-
-
-       static readonly Color DisabledColour = Color.Orange;
-       static readonly Color EnabledColour = Color.Azure;
-
         private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
         {
-            var treeNode = e.Node;
-            bool state;
-            if (treeNode.Checked)
-            {
-                var currentParent = e.Node.Parent;
-                while (true)
-                {
-                    if (currentParent == null)
-                    {
-                        state = true;
-                        break;
-                    }
-
-                    if (currentParent.Checked)
-                    {
-                        currentParent = currentParent.Parent;
-                        continue;
-                    }
-
-                    state = false;
-                    break;
-                }
-            }
-            else
-            {
-                state = false;
-            }
-
-            SetColourState(treeNode, state);
-            SetChildrenState(treeNode.Nodes, state);
-        }
-
-        private static void SetChildrenState(TreeNodeCollection nodes, bool enabled)
-        {
-            foreach (TreeNode node in nodes)
-            {
-                var state = enabled && node.Checked;
-                SetColourState(node, state);
-                SetChildrenState(node.Nodes, state);
-            }
-        }
-
-        private static void SetColourState(TreeNode treeNode, bool enabled)
-        {
-            treeNode.BackColor = enabled ? EnabledColour :  DisabledColour;
-        }
-        
-
-        private void treeView1_DoubleClick(object sender, EventArgs e)
-        {
-
+            TreeViewHelpers.UpdateCurrentAndChildNodes(e.Node);
         }
 
         private void treeView1_BeforeCheck(object sender, TreeViewCancelEventArgs e)

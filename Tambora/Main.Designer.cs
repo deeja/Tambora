@@ -122,8 +122,6 @@
             this.treeView1.TabIndex = 3;
             this.treeView1.BeforeCheck += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView1_BeforeCheck);
             this.treeView1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterCheck);
-            this.treeView1.DoubleClick += new System.EventHandler(this.treeView1_DoubleClick);
-            this.treeView1.ParentChanged += new System.EventHandler(this.treeView1_ParentChanged);
             // 
             // Main
             // 
