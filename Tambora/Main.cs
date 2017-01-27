@@ -56,7 +56,12 @@ namespace Tambora
         {
             foreach (var item in items)
             {
-                TreeNode next = new TreeNode(item.Name) { Tag = item, };
+                TreeNode next = new TreeNode(item.Name)
+                                    {
+                                        Tag = item,
+                                        Checked = true
+                                    };
+                
                 AddItemAndChildren(item.Items, next);
                 itemNode.Nodes.Add(next);
             }
@@ -87,53 +92,68 @@ namespace Tambora
         }
 
 
-        Color disabledColour = Color.Orange;
-        Color enabledColour = Color.Azure;
+       static readonly Color DisabledColour = Color.Orange;
+       static readonly Color EnabledColour = Color.Azure;
 
         private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
         {
             var treeNode = e.Node;
-            foreach (TreeNode node in treeNode.Nodes)
+            bool state;
+            if (treeNode.Checked)
             {
-                node.Checked = treeNode.Checked;
-            }
-
-            if (!treeNode.Checked)
-            {
-                SetDisabledColour(treeNode);
-                return;
-            }
-
-            var currentParent = e.Node.Parent;
-            while (true)
-            {
-                if (currentParent == null)
+                var currentParent = e.Node.Parent;
+                while (true)
                 {
-                    this.SetEnabledColor(treeNode);
+                    if (currentParent == null)
+                    {
+                        state = true;
+                        break;
+                    }
+
+                    if (currentParent.Checked)
+                    {
+                        currentParent = currentParent.Parent;
+                        continue;
+                    }
+
+                    state = false;
                     break;
                 }
-
-                if (currentParent.Checked)
-                {
-                    currentParent = currentParent.Parent;
-                    continue;
-                }
-
-                this.SetDisabledColour(treeNode);
-                break;
+            }
+            else
+            {
+                state = false;
             }
 
+            SetColourState(treeNode, state);
+            SetChildrenState(treeNode.Nodes, state);
+        }
+
+        private static void SetChildrenState(TreeNodeCollection nodes, bool enabled)
+        {
+            foreach (TreeNode node in nodes)
+            {
+                var state = enabled && node.Checked;
+                SetColourState(node, state);
+                SetChildrenState(node.Nodes, state);
+            }
+        }
+
+        private static void SetColourState(TreeNode treeNode, bool enabled)
+        {
+            treeNode.BackColor = enabled ? EnabledColour :  DisabledColour;
+        }
+        
+
+        private void treeView1_DoubleClick(object sender, EventArgs e)
+        {
 
         }
 
-        private void SetDisabledColour(TreeNode treeNode)
+        private void treeView1_BeforeCheck(object sender, TreeViewCancelEventArgs e)
         {
-            treeNode.BackColor = this.disabledColour;
-        }
-
-        private void SetEnabledColor(TreeNode treeNode)
-        {
-            treeNode.BackColor = this.enabledColour;
+            var parent = e.Node.Parent;
+            e.Cancel = parent != null && !parent.Checked;
         }
     }
 }
