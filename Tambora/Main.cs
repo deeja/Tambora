@@ -3,6 +3,7 @@ using System.Windows.Forms;
 
 namespace Tambora
 {
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Tambora.PackageExploder;
@@ -47,16 +48,19 @@ namespace Tambora
         {
             this.Close();
         }
-
+        
         private async void openPackageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                Task.Run( async () => {
-                            var packageItems = await packageExploder.ExplodePackage(this.openFileDialog1.SafeFileName);
-                            Invoke(() => TreeViewHelpers.SetupTreeViewWithPackage(packageItems, treeView1));
-                        });
+                Task.Run(() => this.ExplodePackage());
             }
+        }
+
+        private async Task ExplodePackage()
+        {
+            var packageItems = await this.packageExploder.ExplodePackage(this.openFileDialog1.SafeFileName);
+            this.Invoke(() => TreeViewHelpers.SetupTreeViewWithPackage(packageItems, this.treeView1));
         }
 
         private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
