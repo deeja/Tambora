@@ -41,8 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\FileExtensionNotAcceptedException.cs" />
+    <Compile Include="Exceptions\FileNotValidPackageException.cs" />
     <Compile Include="IPackageExploder.cs" />
     <Compile Include="Events\PackageExplodedArgs.cs" />
+    <Compile Include="IPackageValidator.cs" />
     <Compile Include="PackageExploder.cs" />
     <Compile Include="PackageItem.cs" />
     <Compile Include="Events\PackageProcessingArgs.cs" />

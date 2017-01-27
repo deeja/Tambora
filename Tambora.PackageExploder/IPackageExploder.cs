@@ -10,6 +10,6 @@
 
         event EventHandler ProcessingFinished;
 
-        void ExplodePackage(string safeFileName);
+        void ExplodePackage(string fileName);
     }
 }

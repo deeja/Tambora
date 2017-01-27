@@ -9,6 +9,8 @@ namespace Tambora.PackageExploder.Tests
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
 
+    using Moq;
+
     using NUnit.Framework;
 
     using Tambora.PackageExploder.Exceptions;
@@ -17,8 +19,16 @@ namespace Tambora.PackageExploder.Tests
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class PackageExploder_ExplodePackage
     {
-        PackageExploder exploder = new PackageExploder();
+        private PackageExploder exploder;
+        Mock<IPackageValidator> validator;
 
+
+        [SetUp]
+        public void SetUp()
+        {
+            validator = new Mock<IPackageValidator>();
+            exploder = new PackageExploder(validator.Object);
+        }
 
         [Test, ExpectedException(typeof(FileNotFoundException))]
         public void FileDoesntExist_FileNotFoundThrown()
@@ -54,5 +64,16 @@ namespace Tambora.PackageExploder.Tests
 
             Assert.Fail("Error should have been thrown");
         }
+
+
+        [Test, ExpectedException(typeof(FileNotValidPackageException))]
+        public void ProvidedPackageIsNotValid()
+        {
+            // referencing a file that exists so I don't need to swap out the File.FileExists("...")
+            string filename = Path.Combine(Environment.CurrentDirectory, "Resources\\NotAValidPackage.zip");
+            validator.Setup(packageValidator => packageValidator.IsPackageValid(filename)).Returns(false);
+            exploder.ExplodePackage(filename);
+        }
+        
     }
 }

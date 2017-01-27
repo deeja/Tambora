@@ -14,10 +14,10 @@ namespace Tambora
         public event EventHandler<PackageProcessingArgs> ProcessingStarted;
         public event EventHandler ProcessingFinished;
 
-        public void ExplodePackage(string safeFileName)
+        public void ExplodePackage(string fileName)
         {
             BackgroundWorker worker = new BackgroundWorker();
-            this.OnProcessingStarted(safeFileName);
+            this.OnProcessingStarted(fileName);
             worker.DoWork += this.OnWorkerOnDoWork;
             worker.RunWorkerAsync();
         }
